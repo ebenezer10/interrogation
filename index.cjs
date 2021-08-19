@@ -63,6 +63,14 @@ function tryParseInt(value, defaultValue) {
   return retValue;
 }
 
+function validChoiceRange(response, total) {
+  if (response >= total) {
+    console.log(`${colors.red}Error : enter a valid choice number${colors.reset}`);
+    return false;
+  }
+  return true;
+}
+
 let response;
 const responseArray = [];
 async function mainFunc(questions) {
@@ -75,7 +83,7 @@ async function mainFunc(questions) {
       do {
         // eslint-disable-next-line no-await-in-loop
         response = await getAnswer(item[0], true);
-      } while (!tryParseInt(response, false));
+      } while (!tryParseInt(response, false) || !validChoiceRange(response, item[1].length));
       responseArray.push({ question: item[0], response });
     } if (typeof (item) === 'string') {
       response = await getAnswer(item, false);
