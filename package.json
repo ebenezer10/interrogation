@@ -1,8 +1,10 @@
 {
   "name": "interrogation",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Questioner library",
   "main": "index.cjs",
+  "repository": "https://github.com/ebenezer10/interrogation.git",
+  "keywords": ["readline","question","user-input","survey"],
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -31,20 +31,6 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-/* const clearLastLines = (count) => {
-  process.stdout.moveCursor(0, -count);
-  process.stdout.clearScreenDown();
-}; */
-
-function listenForKey() {
-  process.stdin.on('keypress', (str, key) => {
-    if (key.name === 'up') {
-      console.log('Up');
-    }
-    // process.exit();
-  });
-}
-
 function getAnswer(question, mcq) {
   return new Promise((success, error) => {
     if (mcq) {
@@ -91,7 +77,6 @@ async function mainFunc(questions) {
   // eslint-disable-next-line no-restricted-syntax
   for await (const item of questions) {
     if (Array.isArray(item)) {
-      listenForKey();
       console.log(`${colors.green}${item[0]}${colors.reset}`);
       item[1].forEach((element, index) => {
         console.log(`${colors.yellow}[${index + 1}] ${element}${colors.reset}`);
