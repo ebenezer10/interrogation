@@ -117,3 +117,7 @@ dist
 
 # eslint
 .eslintrc.json
+
+# test files
+test.js
+test2.cjs
