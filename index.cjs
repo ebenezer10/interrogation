@@ -2,9 +2,7 @@ const readline = require('readline');
 
 const colors = {
   reset: '\x1b[0m',
-
   // text color
-
   black: '\x1b[30m',
   red: '\x1b[31m',
   green: '\x1b[32m',
@@ -13,9 +11,7 @@ const colors = {
   magenta: '\x1b[35m',
   cyan: '\x1b[36m',
   white: '\x1b[37m',
-
   // background color
-
   blackBg: '\x1b[40m',
   redBg: '\x1b[41m',
   greenBg: '\x1b[42m',
@@ -26,10 +22,28 @@ const colors = {
   whiteBg: '\x1b[47m',
 };
 
+if (process.stdin.isTTY) {
+  process.stdin.setRawMode(true);
+}
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
+
+/* const clearLastLines = (count) => {
+  process.stdout.moveCursor(0, -count);
+  process.stdout.clearScreenDown();
+}; */
+
+function listenForKey() {
+  process.stdin.on('keypress', (str, key) => {
+    if (key.name === 'up') {
+      console.log('Up');
+    }
+    // process.exit();
+  });
+}
 
 function getAnswer(question, mcq) {
   return new Promise((success, error) => {
@@ -64,7 +78,7 @@ function tryParseInt(value, defaultValue) {
 }
 
 function validChoiceRange(response, total) {
-  if (response >= total) {
+  if (response >= total + 1) {
     console.log(`${colors.red}Error : enter a valid choice number${colors.reset}`);
     return false;
   }
@@ -77,8 +91,10 @@ async function mainFunc(questions) {
   // eslint-disable-next-line no-restricted-syntax
   for await (const item of questions) {
     if (Array.isArray(item)) {
+      listenForKey();
+      console.log(`${colors.green}${item[0]}${colors.reset}`);
       item[1].forEach((element, index) => {
-        console.log(`${colors.yellow}[${index}] ${element}${colors.reset}`);
+        console.log(`${colors.yellow}[${index + 1}] ${element}${colors.reset}`);
       });
       do {
         // eslint-disable-next-line no-await-in-loop
