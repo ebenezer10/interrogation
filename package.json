@@ -1,6 +1,6 @@
 {
   "name": "interrogation",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Questioner library",
   "main": "index.cjs",
   "repository": "https://github.com/ebenezer10/interrogation.git",
