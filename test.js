@@ -5,6 +5,10 @@ import interrogation from './index.cjs';
   console.log(value);
 }); */
 
-interrogation.getAnswersForJson().then((value) => {
+/* interrogation.getAnswersForJson().then((value) => {
   console.log(`value : ${value}`);
-});
+}); */
+
+// console.log(interrogation.encodeQuestions('json-question.json'));
+
+console.log(interrogation.decodeQuestions('question.int'));

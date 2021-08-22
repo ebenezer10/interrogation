@@ -166,3 +166,17 @@ exports.getAnswersForJson = async function () {
   }
   return false;
 };
+
+exports.encodeQuestions = function (filename) {
+  const content = Buffer.from(fs.readFileSync(filename, 'utf8')).toString('base64');
+  fs.writeFile('question.int', content, (err) => {
+    if (err) throw err;
+    console.log('Saved!');
+  });
+  return content;
+};
+
+exports.decodeQuestions = function (filename) {
+  const content = Buffer.from(fs.readFileSync(filename, 'utf8'), 'base64').toString('ascii');
+  return content;
+};
