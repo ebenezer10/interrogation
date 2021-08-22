@@ -1,5 +1,10 @@
 const readline = require('readline');
+const fs = require('fs');
 
+const simpleQuestionKeys = ['type', 'label', 'format'];
+const oneChoiceMcqKeys = ['type', 'label', 'choices'];
+const questionsTypes = ['simple-question', 'one-choice-mcq'];
+const questionsFormats = ['string', 'number'];
 const colors = {
   reset: '\x1b[0m',
   // text color
@@ -79,7 +84,7 @@ function validChoiceRange(response, total) {
 
 let response;
 const responseArray = [];
-async function mainFunc(questions) {
+async function main(questions) {
   // eslint-disable-next-line no-restricted-syntax
   for await (const item of questions) {
     if (Array.isArray(item)) {
@@ -103,7 +108,61 @@ async function mainFunc(questions) {
   return responseArray;
 }
 
+function jsonQuestionValidate(content) {
+  const obj = JSON.parse(content);
+  obj.forEach((item) => {
+    if (!Array.isArray(item)) {
+      if (questionsTypes.includes(item.type)) {
+        if (item.label.trim() !== '') {
+          const keys = Object.keys(item);
+          if (item.type === 'simple-question') {
+            if (questionsFormats.includes(item.format)) {
+              keys.forEach((key) => {
+                if (!simpleQuestionKeys.includes(key)) {
+                  throw Error(`Invalid key found : ${key}`);
+                }
+              });
+            } else {
+              throw Error('Invalid format');
+            }
+          } else if (item.type === 'one-choice-mcq') {
+            if (keys.includes('choices')) {
+              if (Array.isArray(item.choices)) {
+                keys.forEach((key) => {
+                  if (!oneChoiceMcqKeys.includes(key)) {
+                    throw Error(`Invalid key found : ${key}`);
+                  }
+                });
+              } else {
+                throw Error('Choices must be put in array');
+              }
+            } else {
+              throw Error('Choices are not mandatory for mcq type');
+            }
+          }
+        } else {
+          throw Error('Question label cannot be empty');
+        }
+      } else {
+        throw Error('Unrecognized type');
+      }
+    } else {
+      throw Error('Nested objects cannot be array');
+    }
+  });
+
+  return true;
+}
+
 exports.getAnswersFor = async function (questions) {
-  const res = await mainFunc(questions);
+  const res = await main(questions);
   return res;
+};
+
+exports.getAnswersForJson = async function () {
+  const content = fs.readFileSync('json-question.json', 'utf8');
+  if (jsonQuestionValidate(content)) {
+    return content;
+  }
+  return false;
 };
