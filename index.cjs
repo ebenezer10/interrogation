@@ -31,6 +31,12 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+function clearLine(linePosition) {
+  process.stdout.moveCursor(0, linePosition);
+  process.stdout.clearLine();
+  // process.stdout.write('\x1Bc\r');
+}
+
 function getAnswer(question, mcq) {
   return new Promise((success, error) => {
     if (mcq) {
@@ -85,9 +91,11 @@ async function mainFunc(questions) {
         // eslint-disable-next-line no-await-in-loop
         response = await getAnswer(item[0], true);
       } while (!tryParseInt(response, false) || !validChoiceRange(response, item[1].length));
+      clearLine(-(item[1].length + 2));
       responseArray.push({ question: item[0], response });
     } if (typeof (item) === 'string') {
       response = await getAnswer(item, false);
+      clearLine(-1);
       responseArray.push({ question: item, response });
     }
   }
